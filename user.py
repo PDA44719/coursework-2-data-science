@@ -1,12 +1,11 @@
-# Write unit tests that test aspects of this class. You may modify the code or extend it by adding additional
-# attributes and methods. The code has not been tested and may contain bugs.
 from datetime import date
-
+import time
 import bcrypt
 
 
 class User(object):
-    """A user who will use the dashboard and web application.
+    """
+    A user who will use the dashboard and web application.
 
     Args:
         first_name (str): The first name of the person, required
@@ -27,6 +26,8 @@ class User(object):
         calculate_age: Calculates the age from the date of birth
         hash_password: Create a hashed value of the string password
         is_correct_password: Checks if the string password matches the hashed password
+        is_email_correct_format: Checks if the input email exists and has a gmail domain
+
     """
 
     def __init__(self, first_name: str, last_name: str, email: str, password: str, dob: date = None):
@@ -41,18 +42,26 @@ class User(object):
         return f" {self.first_name} {self.last_name} {self.email} {self.dob}"
 
     def create_full_name(self):
-        """Creates the full name by combining first_name and last_name
+        """
+        Create the full name by combining first_name and last_name.
 
-        Returns:
-            Returns the full name
+        Returns
+        -------
+        str
+            The full name of the user.
+
         """
         return f'{self.first_name} {self.last_name}'
 
     def calculate_age(self):
-        """Calculates age based on the current date and the date of birth
+        """
+        Calculate age based on the current date and the date of birth.
 
-        Returns:
-            age (str): The age based on the dob and today's date, or a message if the date of birth has not been set
+        Returns
+        -------
+        int or str
+            The age based on the dob and today's date (int), or a message if the date of birth has not been set (str).
+
         """
         if self.dob is None:
             return "Age not calculated, date of birth unknown"
@@ -62,29 +71,40 @@ class User(object):
             return age
 
     def hash_password(self, password):
-        """ Creates a hashed password from the string
-
+        """
+        Create a hashed password from the string.
         The bcrypt.hashpw() function takes a byte encoded arg, the password string therefore needs to be encoded.
 
-        Args:
-            password (str): Password in string format
-        Returns:
-            None
+        Arguments
+        ---------
+        password : str
+            Password in string.
+
+        Returns
+        -------
+        bytes
+            The value of the hashed password.
+
         """
         salt = bcrypt.gensalt()
         self.hashed_password = bcrypt.hashpw(password.encode('utf8'), salt)
         return self.hashed_password
 
     def is_correct_password(self, password):
-        """ Checks whether the provided password string matches the hashed password
-
+        """
+        Check whether the provided password string matches the hashed password.
         The bcrypt.checkpw() function takes byte encoded args, the password string needs to be encoded.
 
-        Args:
-            password (str): The string value of the password as input by the user
+        Arguments
+        ---------
+        password : str
+            The string value of the password as input by the user.
 
-        Returns:
-            bool : True if there is a match and False if not
+        Returns
+        -------
+        bool
+            True if there is a match and False if not.
+
         """
         if bcrypt.checkpw(password.encode('utf-8'), self.hashed_password):
             return True
@@ -93,10 +113,18 @@ class User(object):
 
     def is_email_correct_format(self):
         """
-        Add comments here
-        :return:
+        Check if the input email address exists (through the use of an email API) and if that email has a gmail
+        domain.
+        The time.sleep(10) line simulates the 10-second API call. It is assumed that the email address exists.
+
+        Returns
+        -------
+        bool
+            True if the user provided an existing gmail address and False otherwise.
+
         """
-        if "@gmail.com" in self.email:
+        time.sleep(10)  # API call
+        if self.email.endswith("@gmail.com"):
             return True
         else:
             return False
